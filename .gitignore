@@ -24,3 +24,8 @@ hs_err_pid*
 /reports_*/
 /target/
 /test-output-thread/
+/.idea/.gitignore
+/.idea/assignment_cimb.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
