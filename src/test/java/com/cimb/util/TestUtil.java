@@ -79,48 +79,26 @@ public class TestUtil extends TestBase {
 
     }
 
-    public WebElement waitForElementToBeClickable(WebDriver driver, WebElement element) {
-
-        final long startTime = System.currentTimeMillis();
-
-        int tries = 0;
-
-        boolean found = false;
-
-        wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)).pollingEvery(Duration.ofSeconds(5))
-                .ignoring(StaleElementReferenceException.class);
-
-        while ((System.currentTimeMillis() - startTime) < 91000) {
-            logger.info("Searching for element " + element.toString() + ". Try number " + (tries++));
-            try {
-
-                element = wait.until(ExpectedConditions.visibilityOf(element));
-
-                found = true;
-
-                break;
-
-            } catch (StaleElementReferenceException e) {
-                logger.error("Stale element: \n" + e.getMessage() + "\n");
-            }
-        }
-
-        long endTime = System.currentTimeMillis();
-
-        long totalTime = endTime - startTime;
-
-        if (found) {
-            logger.info("Found element " + element.toString() + " after waiting for " + totalTime + " milliseconds.");
-        } else {
-            logger.error("Failed to find element " + element.toString() + " after " + totalTime + " milliseconds.");
-        }
-        return element;
-    }
-
     public void clickOnElement(WebDriver driver, WebElement element) {
 
         int attempts = 0;
+        while (attempts < 2) {
+            try {
+                logger.info("Trying to click on element " + element);
+                element.click();
+                break;
+            } catch (StaleElementReferenceException e) {
+                logger.error("**** Stale Element Exception ****" + " attempt = " + attempts + element + driver);
+            } catch (NoSuchElementException e) {
+                logger.error("**** Unable to click element ****" + element);
+            }
+            attempts++;
+        }
+    }
 
+    public void clickOnElement(WebElement element) {
+
+        int attempts = 0;
         while (attempts < 2) {
             try {
                 logger.info("Trying to click on element " + element);
@@ -155,14 +133,51 @@ public class TestUtil extends TestBase {
         clickOnElement(driver, element);
     }
 
+
+    public WebElement waitForElementToBeClickable(WebDriver driver, WebElement element) {
+
+        final long startTime = System.currentTimeMillis();
+        int tries = 0;
+        boolean found = false;
+
+        wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)).pollingEvery(Duration.ofSeconds(5))
+                .ignoring(StaleElementReferenceException.class);
+
+        while ((System.currentTimeMillis() - startTime) < 91000) {
+            logger.info("Searching for element " + element.toString() + ". Try number " + (tries++));
+            try {
+                element = wait.until(ExpectedConditions.visibilityOf(element));
+                found = true;
+                break;
+            } catch (StaleElementReferenceException e) {
+                logger.error("Stale element: \n" + e.getMessage() + "\n");
+            }
+        }
+
+        long endTime = System.currentTimeMillis();
+        long totalTime = endTime - startTime;
+
+        if (found) {
+            logger.info("Found element " + element.toString() + " after waiting for " + totalTime + " milliseconds.");
+        } else {
+            logger.error("Failed to find element " + element.toString() + " after " + totalTime + " milliseconds.");
+        }
+        return element;
+    }
+
     public WebElement waitForElementToBeVisible(WebDriver driver, WebElement element) {
         int attempts = 0;
 
-        while (attempts < 2) {
+        while (attempts < 3) {
             try {
                 wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)).pollingEvery(Duration.ofSeconds(5))
-                        .ignoring(StaleElementReferenceException.class);
+                        .ignoring(StaleElementReferenceException.class)
+                        .ignoring(NoSuchElementException.class);
                 wait.until(ExpectedConditions.visibilityOf(element));
+//                waitForLoad(driver);
+//                new WebDriverWait(driver, 20).until(
+//                        webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+
 
             } catch (StaleElementReferenceException e) {
                 logger.error("**** Stale Element Exception ****" + " attempt = " + attempts + element + driver);
@@ -172,8 +187,18 @@ public class TestUtil extends TestBase {
 
             attempts++;
         }
-
         return element;
+    }
+
+    public void waitForLoad(WebDriver driver) {
+        ExpectedCondition<Boolean> pageLoadCondition = new
+                ExpectedCondition<Boolean>() {
+                    public Boolean apply(WebDriver driver) {
+                        return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+                    }
+                };
+        WebDriverWait wait = new WebDriverWait(driver, 60);
+        wait.until(pageLoadCondition);
     }
 
     // Alert implementation

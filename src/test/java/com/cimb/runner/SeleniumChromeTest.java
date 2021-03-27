@@ -3,9 +3,15 @@ package com.cimb.runner;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
+import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SeleniumChromeTest {
 
@@ -17,13 +23,14 @@ public class SeleniumChromeTest {
 
         logTest();
 
-        seleniumTest();
+//        seleniumTest();
 
+        driver = loadDriverUsingChromeDriverFile();
     }
 
     private static void seleniumTest() {
 //        driver = loadDriverUsingWebDriverManager();
-//        driver = loadDriverUsingChromeDriverFile();
+        driver = loadDriverUsingChromeDriverFile();
 
 
         String url = "https://www.w3schools.com/";
@@ -74,5 +81,41 @@ public class SeleniumChromeTest {
         driver = new ChromeDriver();
 
         return driver;
+    }
+
+    @Test
+    public void testScroll() throws InterruptedException{
+
+        //initializer driver
+        driver = loadDriverUsingChromeDriverFile();
+
+        //Launch flipkart
+        driver.get("http://www.flipkart.com");
+
+        //Dismiss the login modal/dialog
+        driver.findElement(By.xpath("//button[text()='✕']")).click();
+
+        //Write the search term - Buddha in search box
+        WebElement searchBox = driver.findElement(By.cssSelector("input[name='q']"));
+        searchBox.sendKeys("Buddha");
+
+        //Click on searchButton
+        WebElement searchButton = driver.findElement(By.cssSelector("button[type='submit']"));
+        searchButton.click();
+
+        //Inserting an optional wait of 3 seconds just to notice scroll down event
+        Thread.sleep(3000);
+
+        //Scroll down the webpage by 2500 pixels
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        js.executeScript("scrollBy(0, 2500)");
+
+        //Waiting till page:2 text is visible
+        WebElement pageNumberdisplayer = (new WebDriverWait(driver, 10)).until
+                (ExpectedConditions.presenceOfElementLocated(By.cssSelector("//span[text()='Page 1 of 647']")));
+
+        //Verifying that page got scrolled  and "page-2" text is visible now
+        //and more products become visible
+        Assert.assertEquals(pageNumberdisplayer.getText(), "Page 1 of 647");
     }
 }

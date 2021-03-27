@@ -1,7 +1,7 @@
 package com.cimb.pageobjects;
 
 import com.cimb.base.TestBase;
-import com.cimb.util.Actions;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -22,6 +22,9 @@ public class CIMB_MY_HomePage extends TestBase {
     @FindBy(css = "nav.nav-pillar a[href*='cimb-deals']")
     private WebElement cimbDeals;
 
+    @FindBy(css = "footer.alp-cimbd-footer")
+    private WebElement footer;
+
     // Constructor to initialize page objects
     public CIMB_MY_HomePage(WebDriver driver) {
         PageFactory.initElements(driver, this);
@@ -41,34 +44,27 @@ public class CIMB_MY_HomePage extends TestBase {
     }
 
 
-    // Actions
-    public SecureAreaPage clickLogin() {
-//        util.clickOnElement(driver, getLoginButton());
-        return new SecureAreaPage(driver);
-    }
-
+    // Page Actions
     public void closeDefaultLandingDialog() {
-        Actions.dismissDialog();
+        util.clickOnElement(getOverlayClose());
     }
 
-    public void clickBurgerMenu(){
-        util.clickOnElement(driver, getBurgerMenu());
+    public void clickBurgerMenu() {
+        util.clickOnElement(getBurgerMenu());
     }
 
+    public void clickOnQuickLinksByQuickLinkText(String quickLinkText) {
+        WebElement quickLink = driver.findElement(By.xpath("//nav[@class='nav-pillar']/a[text()='" + quickLinkText + "']"));
+        util.clickOnElement(quickLink);
+    }
 
+    public void clickOnSection(String sectionName) {
+        WebElement section = driver.findElement(By.xpath("//ul//li/p[text()='" + sectionName.toUpperCase() + "']"));
+    }
 
-
-
-//    public String getLoginErrorMessageText() {
-//        return util.getMessageByExcludingChild(getLoginErrorMessage());
-//    }
-//
-//    public void enterUsername(String username) {
-//        util.enterTextinElement(getUsername(), username);
-//    }
-//
-//    public void enterPassword(String password) {
-//        util.enterTextinElement(getPassword(), password);
-//    }
+    public DealsPage clickOnCIMBDeals() {
+        this.clickOnQuickLinksByQuickLinkText("CIMB Deals");
+        return new DealsPage(driver);
+    }
 
 }

@@ -2,16 +2,15 @@ package com.cimb.runner;
 
 //import cucumber.api.CucumberOptions;
 
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+import cucumber.api.testng.CucumberFeatureWrapper;
+import cucumber.api.testng.TestNGCucumberRunner;
 import org.junit.runner.RunWith;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
-import cucumber.api.testng.CucumberFeatureWrapper;
-import cucumber.api.testng.TestNGCucumberRunner;
 
 /**
  * @author biswanath.padhi
@@ -21,15 +20,17 @@ import cucumber.api.testng.TestNGCucumberRunner;
 @RunWith(Cucumber.class)
 @CucumberOptions(features =
         {
-                "src/test/resources/features/CIMB_MY_Deals.feature"
+//                "src/test/resources/features/CIMB/my/",
+                "src/test/resources/features/CIMB/sg"
         }, // the path of the feature files
-        glue = {"com/cimb/stepdefinitions", "com/cimb/util"}, // the path of the step definition files from test java folder
+        glue = {"com/cimb/stepdefinitions/sg", "com/cimb/util"}, // the path of the step definition files from test java folder
         // plugin to generate report in different formats
         plugin = {"pretty",
                 "html:target/cucumber_reports",
                 "json:target/cucumber_reports/CucumberTestReport.json",
                 "junit:target/junit_reports/cucumber.xml",
-                "com.cucumber.listener.ExtentCucumberFormatter:target/TestResultReport.html"}, // to generate different types of
+                "com.cucumber.listener.ExtentCucumberFormatter:target/TestResultReport.html",
+        }, // to generate different types of
         // reporting
         monochrome = true, // display the console output in a proper readable format
         strict = true, // it will check if any step is not defined in step definition file

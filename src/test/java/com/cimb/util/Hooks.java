@@ -32,6 +32,7 @@ public class Hooks extends TestBase {
 		logger.debug("****************************   BEFORE   **********************************");
         initializeDriver();
         util = new TestUtil(driver);
+		logger.info("end setUp()");
     } 
  
 	@After

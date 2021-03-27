@@ -3,19 +3,15 @@ package com.cimb.base;
 import com.cimb.util.Actions;
 import com.cimb.util.TestUtil;
 import com.cimb.util.WebEventListener;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
 
 
 /**
@@ -35,13 +31,13 @@ public class TestBase {
     public static Actions actions;
     protected static short scenarioCount = 0;
     private static String browserName;
-    private Logger logger;
+    private static Logger logger;
 
     public TestBase() {
 
         // To initiate the prop
         try (InputStream in = TestBase.class.getClassLoader().getResourceAsStream("config/" + propertiesFileName)) {
-            this.logger = LogManager.getLogger();
+            logger = LogManager.getLogger();
             properties = new Properties();
             properties.load(in);
         } catch (Exception e) {
@@ -51,6 +47,7 @@ public class TestBase {
 
 
     public static void initializeDriver() {
+        logger.info("inside initializeDriver()");
 
         browserName = properties.getProperty("browserType");
         EventFiringWebDriver e_driver;
@@ -58,15 +55,14 @@ public class TestBase {
 
         if (browserName.equalsIgnoreCase("chrome")) {
 
-//            System.setProperty("webdriver.chrome.driver", testResourcesDir + "drivers/chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver", testResourcesDir + "drivers/chromedriver.exe");
 //            System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver.exe");
 //
-//            driver = new ChromeDriver();
-
-
-            WebDriverManager.chromedriver().setup();
-            System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
             driver = new ChromeDriver();
+
+//            WebDriverManager.chromedriver().setup();
+//            System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
+//            driver = new ChromeDriver();
 
 
         } else if (browserName.equalsIgnoreCase("firefox")) {
@@ -76,7 +72,7 @@ public class TestBase {
             driver = new FirefoxDriver();
         }
 
-//        e_driver = new EventFiringWebDriver(driver);
+//        e_driver = new EventFiringWebDriver(drisver);
 //        // Now create object of EventListerHandler to register it with EventFiringWebDriver
 //        eventListener = new WebEventListener();
 //        e_driver.register(eventListener);
@@ -86,10 +82,10 @@ public class TestBase {
 
         driver.manage().deleteAllCookies();
 
-        driver.manage().timeouts().implicitlyWait(TestUtil.IMPLICIT_WAIT, TimeUnit.SECONDS);
-
-        driver.manage().timeouts().pageLoadTimeout(TestUtil.PAGELOAD_TIMEOUT, TimeUnit.SECONDS);
-
+//        driver.manage().timeouts().implicitlyWait(TestUtil.IMPLICIT_WAIT, TimeUnit.SECONDS);
+//
+//        driver.manage().timeouts().pageLoadTimeout(TestUtil.PAGELOAD_TIMEOUT, TimeUnit.SECONDS);
+        logger.info("end initializeDriver()");
 
     }
 }
