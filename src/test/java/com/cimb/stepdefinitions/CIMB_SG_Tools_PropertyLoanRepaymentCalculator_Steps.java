@@ -8,10 +8,10 @@ import cucumber.api.java.en.When;
 
 public class CIMB_SG_Tools_PropertyLoanRepaymentCalculator_Steps {
 
-//
-@Given("I’m on CIMB SG page")
-public void iMOnCIMBSGPage() {
-}
+
+    @Given("I’m on CIMB SG page")
+    public void iMOnCIMBSGPage() {
+    }
 
     @And("I navigate to Tools page from menu")
     public void iNavigateToToolsPageFromMenu() {

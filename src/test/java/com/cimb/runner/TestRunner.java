@@ -1,25 +1,29 @@
 package com.cimb.runner;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
-import cucumber.api.testng.CucumberFeatureWrapper;
-import cucumber.api.testng.TestNGCucumberRunner;
+//import cucumber.api.CucumberOptions;
+
 import org.junit.runner.RunWith;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+import cucumber.api.testng.CucumberFeatureWrapper;
+import cucumber.api.testng.TestNGCucumberRunner;
+
 /**
  * @author biswanath.padhi
  */
 
-@RunWith(Cucumber.class)
-@CucumberOptions(features = {
-//		"src/test/java/com/cimb/features/CIMB_SG_Tools_PropertyLoanRepaymentCalculator.feature",
-		"src/test/java/com/cimb/features/CIMB_MY_Deals.feature"},// the path of the feature files
-        glue = {"com/cimb/stepdefinitions"}, // the path of the step definition files
 
+@RunWith(Cucumber.class)
+@CucumberOptions(features =
+        {
+                "src/test/resources/features/CIMB_MY_Deals.feature"
+        }, // the path of the feature files
+        glue = {"com/cimb/stepdefinitions", "com/cimb/util"}, // the path of the step definition files from test java folder
         // plugin to generate report in different formats
         plugin = {"pretty",
                 "html:target/cucumber_reports",

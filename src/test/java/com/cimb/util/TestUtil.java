@@ -29,10 +29,9 @@ public class TestUtil extends TestBase {
     private static FluentWait<WebDriver> wait;
 
     public TestUtil(WebDriver driver) {
-        logger = LogManager.getLogger(TestUtil.class);
+        logger = LogManager.getLogger();
         IMPLICIT_WAIT = Long.parseLong(properties.getProperty("IMPLICIT_WAIT"));
         PAGELOAD_TIMEOUT = Long.parseLong(properties.getProperty("PAGELOAD_TIMEOUT"));
-
     }
 
     /***

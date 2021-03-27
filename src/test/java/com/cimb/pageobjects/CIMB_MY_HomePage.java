@@ -29,15 +29,15 @@ public class CIMB_MY_HomePage extends TestBase {
 
     // Getters of Page Objects
     public WebElement getOverlayClose() {
-        return util.waitForElementToBeClickable(driver, overlayClose);
+        return util.waitForElementToBeClickable(driver, this.overlayClose);
     }
 
     public WebElement getBurgerMenu() {
-        return util.waitForElementToBeVisible(driver, burgerMenu);
+        return util.waitForElementToBeVisible(driver, this.burgerMenu);
     }
 
     public WebElement getCimbDeals() {
-        return util.waitForElementToBeClickable(driver, cimbDeals);
+        return util.waitForElementToBeClickable(driver, this.cimbDeals);
     }
 
 

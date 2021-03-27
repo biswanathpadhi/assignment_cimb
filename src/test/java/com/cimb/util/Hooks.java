@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class Hooks extends TestBase {
 	
-	private static Logger logger= LogManager.getLogger(Hooks.class);
+	private static Logger logger= LogManager.getLogger();
 
 	@Before
     public void setUp(){
@@ -43,8 +43,16 @@ public class Hooks extends TestBase {
 			    logError(scenario);
 			if(driver != null)
 				driver.quit();
+
+			logger.info("**************************** Successfully Closed the browser session ****************************");
 		} catch (IOException e) {
 			logger.error("Exception in tearDown()");
+		} finally{
+			try{
+				driver.quit();
+			}catch (Exception e){
+				logger.error("Could not quit session");
+			}
 		}
 	}
 
