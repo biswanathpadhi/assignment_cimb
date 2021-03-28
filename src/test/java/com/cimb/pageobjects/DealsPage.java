@@ -1,6 +1,8 @@
 package com.cimb.pageobjects;
 
-import com.cimb.base.TestBase;
+import com.cimb.util.TestUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -14,7 +16,11 @@ import java.util.List;
 /**
  * @author biswanath.padhi
  */
-public class DealsPage extends TestBase {
+public class DealsPage {
+
+    private final TestUtil util;
+    private Logger logger;
+    private WebDriver driver;
 
     // Page Objects
     @FindBy(css = ".modal-close-button")
@@ -28,6 +34,9 @@ public class DealsPage extends TestBase {
 
     // Constructor to initialize page objects
     public DealsPage(WebDriver driver) {
+        this.logger = LogManager.getLogger();
+        this.driver = driver;
+        this.util = new TestUtil(driver);
         PageFactory.initElements(driver, this);
     }
 

@@ -1,12 +1,18 @@
 package com.cimb.pageobjects;
 
-import com.cimb.base.TestBase;
+import com.cimb.util.TestUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class DealDetailsPage extends TestBase {
+public class DealDetailsPage {
+
+    private final TestUtil util;
+    private Logger logger;
+    private WebDriver driver;
 
     // Page Objects
     @FindBy(css = "p.detail-text-first")
@@ -17,6 +23,9 @@ public class DealDetailsPage extends TestBase {
 
     // Constructor to initialize page objects
     public DealDetailsPage(WebDriver driver) {
+        this.logger = LogManager.getLogger();
+        this.driver = driver;
+        this.util = new TestUtil(driver);
         PageFactory.initElements(driver, this);
     }
 

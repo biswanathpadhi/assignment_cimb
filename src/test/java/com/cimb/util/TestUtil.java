@@ -1,6 +1,5 @@
 package com.cimb.util;
 
-import com.cimb.base.TestBase;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,23 +12,29 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
 
 /**
  * @author biswanath.padhi
  */
 
-public class TestUtil extends TestBase {
+public class TestUtil {
 
-    public static final String TESTDATA_SHEET_PATH = testDataDir + "TestData.xlsx";
-    private static long IMPLICIT_WAIT;
-    private static long PAGELOAD_TIMEOUT;
-    public static JavascriptExecutor js;
-    private static Logger logger;
-    private static FluentWait<WebDriver> wait;
+//    public static final String TESTDATA_SHEET_PATH = testDataDir + "TestData.xlsx";
+    private long IMPLICIT_WAIT;
+    private long PAGELOAD_TIMEOUT;
+    public JavascriptExecutor js;
+    private Logger logger;
+    private FluentWait<WebDriver> wait;
+    private WebDriver driver;
+
 
     public TestUtil(WebDriver driver) {
         logger = LogManager.getLogger();
+        this.driver = driver;
+        Properties properties = new ConfigReader().init_prop();
         IMPLICIT_WAIT = Long.parseLong(properties.getProperty("IMPLICIT_WAIT"));
         PAGELOAD_TIMEOUT = Long.parseLong(properties.getProperty("PAGELOAD_TIMEOUT"));
     }
@@ -65,6 +70,8 @@ public class TestUtil extends TestBase {
 
         File scrFile = ((TakesScreenshot) this.driver).getScreenshotAs(OutputType.FILE);
 
+        String userDir = System.getProperty("user.dir");
+
         FileUtils.copyFile(scrFile, new File(userDir + "/screenshots/" + "FAILED_" + getDateTime() + System.currentTimeMillis() + ".png"));
 
     }
@@ -99,13 +106,15 @@ public class TestUtil extends TestBase {
     public void clickOnElement(WebElement element) {
 
         int attempts = 0;
-        while (attempts < 2) {
+        boolean shouldBreak = false;
+        while (!shouldBreak && attempts < 2) {
             try {
                 logger.info("Trying to click on element " + element);
                 if (element.isEnabled() && element.isDisplayed()) {
                     moveToElementAndClick(driver, element);
+                    shouldBreak = true;
+                    break;
                 }
-                break;
             } catch (StaleElementReferenceException e) {
                 logger.error("**** Stale Element Exception ****" + " attempt = " + attempts + element + driver);
             } catch (NoSuchElementException e) {
@@ -118,9 +127,21 @@ public class TestUtil extends TestBase {
     public void enterTextinElement(WebElement element, String textToEnter) {
         try {
             logger.info("Trying to enter text in element " + element);
+
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({" +
+                    "  behavior: 'smooth' , " +
+                    "  block: 'center' , " +
+                    "  inline: 'center' });", element);
+
+            Actions actions = new Actions(driver).moveToElement(element);
+
+            element.clear();
+            element.click();
+            element.sendKeys(Keys.CONTROL, "a");
+            element.sendKeys(Keys.BACK_SPACE);
             element.sendKeys(textToEnter);
         } catch (StaleElementReferenceException e) {
-            System.out.println("**** Stale Element Exception ****" + element);
+            logger.error("**** Stale Element Exception ****" + element);
         } catch (NoSuchElementException e) {
             logger.error("**** Unable to enter text in element **** " + element);
         }
@@ -133,7 +154,7 @@ public class TestUtil extends TestBase {
 
             actions.moveToElement(element).build().perform();
 
-            clickOnElement(driver, element);
+            element.click();
         } catch (Exception e) {
             logger.error("******* Error Message: " + e.getMessage());
         }
@@ -197,14 +218,20 @@ public class TestUtil extends TestBase {
     }
 
     public void waitForLoad(WebDriver driver) {
-        ExpectedCondition<Boolean> pageLoadCondition = new
-                ExpectedCondition<Boolean>() {
-                    public Boolean apply(WebDriver driver) {
-                        return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
-                    }
-                };
-        WebDriverWait wait = new WebDriverWait(driver, 60);
-        wait.until(pageLoadCondition);
+        try{
+
+            ExpectedCondition<Boolean> pageLoadCondition = new
+                    ExpectedCondition<Boolean>() {
+                        public Boolean apply(WebDriver driver) {
+                            return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
+                        }
+                    };
+            WebDriverWait wait = new WebDriverWait(driver, 60);
+            wait.until(pageLoadCondition);
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            logger.debug(e.getMessage());
+        }
     }
 
     // Alert implementation
@@ -254,6 +281,11 @@ public class TestUtil extends TestBase {
         }
     }
 
+    public WebDriver switchToWindowById(int index){
+        ArrayList<String> tabList = new ArrayList<String>(driver.getWindowHandles());
+        //switch to new tab
+        return driver.switchTo().window(tabList.get((1)));
+    }
     /***
      * Switch to a frame by providing either frame name or frame ID
      * @param frameNameOrId
@@ -310,5 +342,11 @@ public class TestUtil extends TestBase {
         }
 
         return message;
+    }
+
+
+    public void visitMe(String url){
+        this.driver.navigate().to(url);
+        waitForLoad(this.driver);
     }
 }

@@ -4,7 +4,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
-import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -83,7 +82,7 @@ public class SeleniumChromeTest {
         return driver;
     }
 
-    @Test
+//    @Test(enabled=false)
     public void testScroll() throws InterruptedException{
 
         //initializer driver

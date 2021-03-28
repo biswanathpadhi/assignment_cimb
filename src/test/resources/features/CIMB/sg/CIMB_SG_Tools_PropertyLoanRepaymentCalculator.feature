@@ -1,7 +1,7 @@
 Feature: verify CIMB Singapore Tools
 
   Scenario Outline: Verify Property Loan Repayment Calculator
-    Given I’m on CIMB "<countryName>" page
+    Given I’m on CIMB Singapore "<countryName>" page
     And I navigate to Tools page from menu
     When I access to Property Loan Repayment Calculator from menu
     And I have inputted all necessary values

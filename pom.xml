@@ -13,34 +13,77 @@
     <url>http://www.example.com</url>
 
     <properties>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <cucumber.version>6.9.0</cucumber.version>
+        <junit.version>4.13.1</junit.version>
         <selenium-java.version>3.141.59</selenium-java.version>
+        <webdrivermanager.version>4.2.2</webdrivermanager.version>
+        <extentreports-cucumber6-adapter.version>2.6.0</extentreports-cucumber6-adapter.version>
+        <testng.version>7.0.0</testng.version>
+        <apache.poi.version>4.1.2</apache.poi.version>
+        <apache.poi-ooxml.version>4.1.2</apache.poi-ooxml.version>
+        <log4j.version>2.13.3</log4j.version>
+
+
+        <maven.compiler.version>3.8.0</maven.compiler.version>
+        <maven.surefire.version>2.22.1</maven.surefire.version>
+        <java.version>10</java.version>
+
+
         <extentreports.version>2.41.2</extentreports.version>
         <commons-io.version>2.6</commons-io.version>
-        <testng.version>7.0.0</testng.version>
         <!-- <log4j.version>1.2.17</log4j.version> -->
-        <java.version>1.9</java.version>
-        <log4j.version>2.13.3</log4j.version>
-        <log4j.version>2.11.2</log4j.version>
-        <disruptor.version>3.4.2</disruptor.version>
-        <junit.version>4.13.1</junit.version>
-        <cucumber-jvm.version>1.2.5</cucumber-jvm.version>
-        <cucumber-junit.version>1.2.5</cucumber-junit.version>
-        <cucumber-core.version>1.2.5</cucumber-core.version>
-        <cucumber-html.version>0.2.3</cucumber-html.version>
-        <cucumber-java.version>1.2.5</cucumber-java.version>
-        <cucumber-jvm-deps.version>1.0.5</cucumber-jvm-deps.version>
-        <gherkin.version>2.12.2</gherkin.version>
-        <hamcrest-all.version>1.3</hamcrest-all.version>
-        <cucumber-picocontainer.version>1.2.5</cucumber-picocontainer.version>
-        <cucumber-testng.version>1.2.5</cucumber-testng.version>
-        <com.aventstack-extentreports.version>3.0.5</com.aventstack-extentreports.version>
-        <cucumber-reporting.version>3.6.0</cucumber-reporting.version>
-        <freemarker.version>2.3.26-incubating</freemarker.version>
-        <cucumber-extentsreport.version>2.0.4</cucumber-extentsreport.version>
+
+
+        <!--            <disruptor.version>3.4.2</disruptor.version>-->
+        <!--            <junit.version>4.13.1</junit.version>-->
+        <!--            <cucumber-jvm.version>1.2.5</cucumber-jvm.version>-->
+        <!--            <cucumber-junit.version>1.2.5</cucumber-junit.version>-->
+        <!--            <cucumber-core.version>1.2.5</cucumber-core.version>-->
+        <!--            <cucumber-html.version>0.2.3</cucumber-html.version>-->
+        <!--            <cucumber-java.version>1.2.5</cucumber-java.version>-->
+        <!--            <cucumber-jvm-deps.version>1.0.5</cucumber-jvm-deps.version>-->
+        <!--            <gherkin.version>2.12.2</gherkin.version>-->
+        <!--            <hamcrest-all.version>1.3</hamcrest-all.version>-->
+        <!--            <cucumber-picocontainer.version>1.2.5</cucumber-picocontainer.version>-->
+        <!--            <cucumber-testng.version>1.2.5</cucumber-testng.version>-->
+        <!--            <com.aventstack-extentreports.version>3.0.5</com.aventstack-extentreports.version>-->
+        <!--            <cucumber-reporting.version>3.6.0</cucumber-reporting.version>-->
+        <!--            <freemarker.version>2.3.26-incubating</freemarker.version>-->
+        <!--            <cucumber-extentsreport.version>2.0.4</cucumber-extentsreport.version>-->
     </properties>
 
     <dependencies>
+
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -48,33 +91,40 @@
             <version>${selenium-java.version}</version>
         </dependency>
 
-        <!-- <dependency> <groupId>org.testng</groupId> <artifactId>testng</artifactId>
-            <version>6.8</version> <scope>compile</scope> </dependency> -->
-        <!-- <dependency> <groupId>org.apache.poi</groupId> <artifactId>poi</artifactId>
-            <version>3.16-beta2</version> </dependency> -->
-
-        <!-- https://mvnrepository.com/artifact/com.relevantcodes/extentreports -->
         <dependency>
-            <groupId>com.relevantcodes</groupId>
-            <artifactId>extentreports</artifactId>
-            <version>${extentreports.version}</version>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>${webdrivermanager.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
+            <groupId>tech.grasshopper</groupId>
+            <artifactId>extentreports-cucumber6-adapter</artifactId>
+            <version>${extentreports-cucumber6-adapter.version}</version>
+            <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.testng/testng -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
-            <scope>compile</scope>
+            <scope>test</scope>
         </dependency>
 
+
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${apache.poi.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache.poi-ooxml.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -87,155 +137,71 @@
             <version>${log4j.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-jvm</artifactId>
-            <version>${cucumber-jvm.version}</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-junit</artifactId>
-            <version>${cucumber-junit.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/info.cukes/cucumber-core -->
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-core</artifactId>
-            <version>${cucumber-core.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/info.cukes/cucumber-html -->
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-html</artifactId>
-            <version>${cucumber-html.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/info.cukes/cucumber-java -->
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>${cucumber-java.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/info.cukes/cucumber-jvm-deps -->
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-jvm-deps</artifactId>
-            <version>${cucumber-jvm-deps.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/info.cukes/gherkin -->
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>gherkin</artifactId>
-            <version>${gherkin.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>${hamcrest-all.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/info.cukes/cucumber-picocontainer -->
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-picocontainer</artifactId>
-            <version>${cucumber-picocontainer.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/info.cukes/cucumber-testng -->
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-testng</artifactId>
-            <version>${cucumber-testng.version}</version>
-        </dependency>
-
-        <!-- Extent Reports -->
-        <dependency>
-            <groupId>com.aventstack</groupId>
-            <artifactId>extentreports</artifactId>
-            <version>${com.aventstack-extentreports.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>${freemarker.version}</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/net.masterthought/cucumber-reporting -->
-        <dependency>
-            <groupId>net.masterthought</groupId>
-            <artifactId>cucumber-reporting</artifactId>
-            <version>${cucumber-reporting.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.vimalselvam</groupId>
-            <artifactId>cucumber-extentsreport</artifactId>
-            <version>${cucumber-extentsreport.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>3.7.1</version>
-        </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>${maven.compiler.version}</version>
                 <configuration>
+                    <encoding>UTF-8</encoding>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
-
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.21.0</version>
-                <configuration>
-                    <!-- TestNG Suite XML files list for test execution -->
-                    <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                </configuration>
+                <version>${maven.surefire.version}</version>
+<!--                <configuration>-->
+<!--                    <includes>-->
+<!--                        <include>**/ParallelRun.java</include>-->
+<!--                    </includes>-->
+<!--                    <parallel>methods</parallel>-->
+<!--                    <threadCount>4</threadCount>-->
+<!--                    <useUnlimitedThreads>false</useUnlimitedThreads>-->
+<!--                </configuration>-->
             </plugin>
 
-            <!-- <plugin>
-                <groupId>net.masterthought</groupId>
-                <artifactId>maven-cucumber-reporting</artifactId>
-                <version>3.15.0</version>
-                <executions>
-                    <execution>
-                        <id>execution</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <projectName>MyProjectName</projectName>  Replace with project name
-                            <outputDirectory>target/cucumber-reports/advanced-reports</outputDirectory>
-                            <cucumberOutput>target/cucumber-reports/CucumberTestReport.json</cucumberOutput>
-                            <buildNumber>1</buildNumber>
-                            <parallelTesting>false</parallelTesting>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin> -->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-failsafe-plugin</artifactId>-->
+<!--                <version>3.0.0-M1</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>integration-test</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            &lt;!&ndash;UNCOMMENT - To add any exclusions if required&ndash;&gt;-->
+<!--                            <excludes>-->
+<!--                                <exclude>**/*IT*.java</exclude>-->
+<!--                            </excludes>-->
+<!--                            <includes>-->
+<!--                                &lt;!&ndash;UNCOMMENT BELOW LINE - To execute feature files with a single runner&ndash;&gt;-->
+<!--                                <include>**/TestRunner.java</include>-->
+<!--                                &lt;!&ndash;UNCOMMENT BELOW LINE - To execute feature files with multiple runners&ndash;&gt;-->
+<!--                                &lt;!&ndash;<include>**/*Runner.java</include>&ndash;&gt;-->
+<!--                            </includes>-->
+<!--                            &lt;!&ndash;UNCOMMENT BELOW 3 LINES - To execute using parallel or combination option&ndash;&gt;-->
+<!--&lt;!&ndash;                             <parallel>methods</parallel>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <threadCount>4</threadCount>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <perCoreThreadCount>true</perCoreThreadCount>&ndash;&gt;-->
+<!--                            &lt;!&ndash;UNCOMMENT BELOW 3 LINES - To execute using forking or combination option&ndash;&gt;-->
+<!--&lt;!&ndash;                            <forkCount>2</forkCount>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <reuseForks>true</reuseForks>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <reportsDirectory>${project.build.directory}/failsafe-reports_${surefire.forkNumber}</reportsDirectory>&ndash;&gt;-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+
+
         </plugins>
     </build>
 </project>
