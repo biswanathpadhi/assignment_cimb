@@ -22,8 +22,8 @@ import java.util.Date;
 public class TestUtil extends TestBase {
 
     public static final String TESTDATA_SHEET_PATH = testDataDir + "TestData.xlsx";
-    public static long IMPLICIT_WAIT;
-    public static long PAGELOAD_TIMEOUT;
+    private static long IMPLICIT_WAIT;
+    private static long PAGELOAD_TIMEOUT;
     public static JavascriptExecutor js;
     private static Logger logger;
     private static FluentWait<WebDriver> wait;
@@ -102,7 +102,9 @@ public class TestUtil extends TestBase {
         while (attempts < 2) {
             try {
                 logger.info("Trying to click on element " + element);
-                element.click();
+                if (element.isEnabled() && element.isDisplayed()) {
+                    moveToElementAndClick(driver, element);
+                }
                 break;
             } catch (StaleElementReferenceException e) {
                 logger.error("**** Stale Element Exception ****" + " attempt = " + attempts + element + driver);
@@ -126,11 +128,15 @@ public class TestUtil extends TestBase {
 
     public void moveToElementAndClick(WebDriver driver, WebElement element) {
 
-        Actions actions = new Actions(driver);
+        try {
+            org.openqa.selenium.interactions.Actions actions = new Actions(driver);
 
-        actions.moveToElement(element).build().perform();
+            actions.moveToElement(element).build().perform();
 
-        clickOnElement(driver, element);
+            clickOnElement(driver, element);
+        } catch (Exception e) {
+            logger.error("******* Error Message: " + e.getMessage());
+        }
     }
 
 
@@ -194,7 +200,7 @@ public class TestUtil extends TestBase {
         ExpectedCondition<Boolean> pageLoadCondition = new
                 ExpectedCondition<Boolean>() {
                     public Boolean apply(WebDriver driver) {
-                        return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+                        return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
                     }
                 };
         WebDriverWait wait = new WebDriverWait(driver, 60);
@@ -281,37 +287,13 @@ public class TestUtil extends TestBase {
         driver.switchTo().defaultContent();
     }
 
-    /***
-     * Gets the message of the element after removing all its child elements and trimming
-     * @param Element to get text removing all of its child elements
+    /**
+     * Get the text of webelement
      *
+     * @param driver
+     * @param element
+     * @return
      */
-    public String getMessageByExcludingChild(WebElement orginialMessage) {
-
-        String truncatedMessage = null;
-
-        try {
-
-            isjQueryLoaded(driver);
-
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-
-            truncatedMessage = (String) js
-                    .executeScript("return $(arguments[0]).children().remove().end().text().trim()", orginialMessage);
-
-            logger.info("orginialMessage = " + orginialMessage.getText());
-
-            logger.info("truncatedMessage = " + truncatedMessage);
-
-        } catch (Exception e) {
-
-            logger.debug("Trying to get text excluding all child elements from element: " + orginialMessage);
-
-            logger.error("Exception occured while getting text from element");
-        }
-        return truncatedMessage;
-    }
-
     public String getText(WebDriver driver, WebElement element) {
 
         String message = null;
