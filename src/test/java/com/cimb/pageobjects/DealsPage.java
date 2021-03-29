@@ -56,6 +56,7 @@ public class DealsPage {
     // Page Actions
     public void closeDefaultLandingDialog() {
         if (getOverlayCountryClose().isDisplayed()) {
+
             util.clickOnElement(getOverlayCountryClose());
         }
     }
