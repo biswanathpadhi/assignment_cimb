@@ -23,7 +23,7 @@ public class CIMB_MY_HomePage {
     private final Properties properties;
 
     // Page Objects
-    @FindBy(css = "svg[class*='osoverlay-close']")
+    @FindBy(css = "svg[class*='overlay-close']")
     private WebElement overlayClose;
 
     @FindBy(css = "div[class*='btn-burger-menu']")
