@@ -28,7 +28,7 @@ public class CIMB_SG_Tools_PropertyLoanRepaymentCalculatorPage_Steps {
         // Write code here that turns the phrase above into concrete actions
         cimbSingaporeHomePage = new CIMB_SG_HomePage(DriverFactory.getDriver());
         cimbSingaporeHomePage.visitMe();
-        cimbSingaporeHomePage.closeDefaultLandingDialog();
+//        cimbSingaporeHomePage.closeDefaultLandingDialog();
     }
 
     @Given("^I navigate to Tools page from menu$")

@@ -110,11 +110,15 @@ public class TestUtil {
         while (!shouldBreak && attempts < 2) {
             try {
                 logger.info("Trying to click on element " + element);
-                if (element.isEnabled() && element.isDisplayed()) {
-                    moveToElementAndClick(driver, element);
-                    shouldBreak = true;
-                    break;
-                }
+//                if (element.isEnabled() && element.isDisplayed()) {
+//                    moveToElementAndClick(driver, element);
+//                    shouldBreak = true;
+//                    break;
+//                }
+
+                moveToElementAndClick(driver, element);
+                shouldBreak = true;
+                break;
             } catch (StaleElementReferenceException e) {
                 logger.error("**** Stale Element Exception ****" + " attempt = " + attempts + element + driver);
             } catch (NoSuchElementException e) {
@@ -218,20 +222,14 @@ public class TestUtil {
     }
 
     public void waitForLoad(WebDriver driver) {
-        try{
-
-            ExpectedCondition<Boolean> pageLoadCondition = new
-                    ExpectedCondition<Boolean>() {
-                        public Boolean apply(WebDriver driver) {
-                            return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
-                        }
-                    };
-            WebDriverWait wait = new WebDriverWait(driver, 60);
-            wait.until(pageLoadCondition);
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            logger.debug(e.getMessage());
-        }
+        ExpectedCondition<Boolean> pageLoadCondition = new
+                ExpectedCondition<Boolean>() {
+                    public Boolean apply(WebDriver driver) {
+                        return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
+                    }
+                };
+        WebDriverWait wait = new WebDriverWait(driver, 60);
+        wait.until(pageLoadCondition);
     }
 
     // Alert implementation
@@ -240,15 +238,12 @@ public class TestUtil {
     }
 
     public void accept() {
-
         try {
 
             driver.switchTo().alert().accept();
-
         } catch (Exception e) {
 
             logger.debug("Trying to click Ok in alert: ");
-
             logger.error("Exception occured while clicking on OK in alert ");
         }
     }
@@ -258,11 +253,9 @@ public class TestUtil {
         try {
 
             driver.switchTo().alert().dismiss();
-
         } catch (Exception e) {
 
             logger.debug("Trying to click Ok Cancel in alert: ");
-
             logger.error("Exception occured while clicking on CANCEL in alert ");
         }
     }
@@ -272,11 +265,9 @@ public class TestUtil {
         try {
 
             driver.switchTo().alert().sendKeys(message);
-
         } catch (Exception e) {
 
             logger.debug("Trying to send message " + message + " to alert: ");
-
             logger.error("Exception occured while entering text in alert ");
         }
     }
@@ -303,7 +294,6 @@ public class TestUtil {
             } catch (Exception e) {
 
                 logger.debug("Trying to switchToFrameByNameOrId: " + frameNameOrId);
-
                 logger.error("Exception occured while switching to frame");
             }
 
@@ -337,7 +327,6 @@ public class TestUtil {
         } catch (Exception e) {
 
             logger.debug("Trying to get text from element: " + element);
-
             logger.error("Exception occured while getting text from element");
         }
 
