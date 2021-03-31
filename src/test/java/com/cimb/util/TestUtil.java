@@ -349,4 +349,8 @@ public class TestUtil {
         this.driver.navigate().to(url);
         waitForLoad(this.driver);
     }
+
+    public void waitUntilElementDisappeared(WebDriver driver, WebElement element){
+        new WebDriverWait(driver, 20).until(ExpectedConditions.invisibilityOfAllElements(element));
+    }
 }

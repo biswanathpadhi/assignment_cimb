@@ -43,6 +43,9 @@ public class CIMB_MY_DealsPage_Steps {
         // select the section
         dealsPage.clickOnSection(sectionName);
 
+        // wait for the spinner to close
+        dealsPage.waitUntilSpinnerDisappar();
+
         // select the deal to explore
         dealDetailsPage = dealsPage.clickOnDeal(dealTextFirst);
     }

@@ -32,6 +32,9 @@ public class DealsPage {
     @FindBy(css = "p.detail-text-first")
     private WebElement detailText;
 
+    @FindBy(css = "ng4-loading-spinner")
+    private WebElement spinner;
+
     // Constructor to initialize page objects
     public DealsPage(WebDriver driver) {
         this.logger = LogManager.getLogger();
@@ -104,4 +107,10 @@ public class DealsPage {
 
         return new DealDetailsPage(driver);
     }
+
+    public void waitUntilSpinnerDisappar(){
+        util.waitUntilElementDisappeared(driver, this.spinner);
+    }
+
+
 }
