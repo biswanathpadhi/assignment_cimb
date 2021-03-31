@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
@@ -32,19 +33,40 @@ public class DriverFactory {
         browser = browser.toLowerCase();
 
         if (browser.equals("chrome")) {
-//            WebDriverManager.chromedriver().setup();
-//            threadLocal.set(new ChromeDriver());
 
+            /**
+             * Create webdriver using webdrivermanager ----- CURRENTLY HAVING ISSUE with as reported in GITHUBISSUE 442
+             */
+            System.setProperty("webdriver.chrome.silentOutput", "true");
+            WebDriverManager.chromedriver().setup();
+            threadLocal.set(new ChromeDriver());
+
+            /**
+             * Create webdriver using local driver file
+             */
+
+            /*
             String userDir = System.getProperty("user.dir");
-            // Load using chromeDriver
-//            System.setProperty("webdriver.chrome.driver", "//src//test//resources//drivers/chromedriver.exe");
+             Load using chromeDriver
+            System.setProperty("webdriver.chrome.driver", "//src//test//resources//drivers/chromedriver.exe");
             System.setProperty("webdriver.chrome.driver", "src//test//resources//drivers//chromedriver.exe");
             threadLocal.set(new ChromeDriver());
+
+             */
         } else if (browser.equals("firefox")) {
+
             WebDriverManager.firefoxdriver().setup();
             threadLocal.set(new FirefoxDriver());
+
+        } else if (browser.equals("edge")) {
+
+            WebDriverManager.edgedriver().setup();
+            threadLocal.set(new EdgeDriver());
+
         } else if (browser.equals("safari")) {
+
             threadLocal.set(new SafariDriver());
+
         } else {
             logger.error("Invalid browser: " + browser);
         }

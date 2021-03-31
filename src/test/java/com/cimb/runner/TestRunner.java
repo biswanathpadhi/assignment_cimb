@@ -4,9 +4,6 @@ import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
-
-
-
 /**
  * @author biswanath.padhi
  */
@@ -17,6 +14,7 @@ import org.junit.runner.RunWith;
         {
                 "src/test/resources/features/CIMB"
         }, // the path of the feature files
+
         glue = {"com/cimb/stepdefinitions", "com/cimb/util"}, // the path of the step definition files from test java folder
 
         // plugin to generate report in different formats

@@ -11,6 +11,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author biswanath.padhi
@@ -60,7 +61,8 @@ public class CIMB_SG_HomePage {
 
     // Page Actions
     public void closeDefaultLandingDialog() {
-        util.clickOnElement(getOverlayClose());
+        util.waitForLoad(driver);
+        if(getOverlayClose().isDisplayed())   util.clickOnElement(getOverlayClose());
     }
 
     public void clickBurgerMenu() {
@@ -83,6 +85,7 @@ public class CIMB_SG_HomePage {
             String url = properties.getProperty("cimb_sg_url");
             driver.get(url);
             util.waitForLoad(driver);
+            driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
         } catch (Exception e) {
             logger.debug("Failed to execute iMOnCIMBPage step");
             logger.error("Exception occured: " + e.getMessage());
