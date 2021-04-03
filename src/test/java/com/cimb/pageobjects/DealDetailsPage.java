@@ -8,6 +8,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.List;
+
 public class DealDetailsPage {
 
     private final TestUtil util;
@@ -20,6 +22,12 @@ public class DealDetailsPage {
 
     @FindBy(css= "p.detail-text-second")
     private WebElement detailTextSecond;
+
+    @FindBy(css = "div[class*='similar-section'] p[class*='section-title']")
+    private WebElement similarSectionTitle;
+
+    @FindBy(css = "div[class='section-body'] deal-item")
+    private List<WebElement> similarDeals;
 
     // Constructor to initialize page objects
     public DealDetailsPage(WebDriver driver) {
@@ -36,5 +44,22 @@ public class DealDetailsPage {
 
     public WebElement getDetailTextSecond() {
         return util.waitForElementToBeVisible(driver, this.detailTextSecond);
+    }
+
+    public WebElement getSimilarSectionTitle() {
+        return util.waitForElementToBeVisible(driver, this.similarSectionTitle);
+    }
+
+    public List<WebElement> getSimilarDeals() {
+        return util.waitForElementsToBeVisible(driver, this.similarDeals);
+    }
+
+    public boolean isSimilarSectionTitleDisplayed(){
+                           return getSimilarSectionTitle().isDisplayed();
+    }
+
+
+    public int noOfSimilarDealsDisplayed(){
+         return getSimilarDeals().size();
     }
 }

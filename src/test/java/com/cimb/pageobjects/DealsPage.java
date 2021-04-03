@@ -4,13 +4,13 @@ import com.cimb.util.TestUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,15 +26,6 @@ public class DealsPage {
     @FindBy(css = ".modal-close-button")
     private WebElement overlayCountryClose;
 
-    @FindBy(css = "footer.alp-cimbd-footer")
-    private WebElement footer;
-
-    @FindBy(css = "p.detail-text-first")
-    private WebElement detailText;
-
-    @FindBy(css = "ng4-loading-spinner")
-    private WebElement spinner;
-
     // Constructor to initialize page objects
     public DealsPage(WebDriver driver) {
         this.logger = LogManager.getLogger();
@@ -48,19 +39,12 @@ public class DealsPage {
         return util.waitForElementToBeClickable(driver, this.overlayCountryClose);
     }
 
-    public WebElement getFooter() {
-        return util.waitForElementToBeVisible(driver, this.footer);
-    }
-
-    public WebElement getDetailText() {
-        return util.waitForElementToBeVisible(driver, this.detailText);
-    }
-
     // Page Actions
     public void closeDefaultLandingDialog() {
-        if (getOverlayCountryClose().isDisplayed()) {
-            util.clickOnElement(getOverlayCountryClose());
-        }
+//        if (getOverlayCountryClose().isDisplayed()) {
+//            util.waitAndDismissAppearedAlertsModals(getOverlayCountryClose());
+//        }
+        util.waitAndDismissAppearedAlertsModals(getOverlayCountryClose());
     }
 
     public void clickOnSection(String sectionName) {
@@ -68,49 +52,95 @@ public class DealsPage {
         util.clickOnElement(util.waitForElementToBeClickable(driver, section));
     }
 
-    public DealDetailsPage clickOnDeal(String dealText) {
-
-        List<WebElement> dealTextFirstList = driver.findElements(By.cssSelector("div.card-body p.card-text.deal-text-first"));
+    public DealDetailsPage clickOnDeal(String dealText) throws InterruptedException {
         boolean dealFound = false;
-        boolean endOfPageReached = false;
-        Actions act = new Actions(driver);
+        List<String> values = new ArrayList<>();
+        By footerBy = By.cssSelector("footer");
+        int dealItemCountBeforeScroll = 0;
+        int dealItemCountAfterScroll = 0;
+        String text = "";
 
         // find deal until found it or reached footer
         do {
+            List<WebElement> dealTextFirstList = driver.findElements(By.cssSelector("deal-item p[class='card-text deal-text-first']"));
+            dealText = new StringBuilder().append(Character.toUpperCase(dealText.charAt(0))).append(dealText.toLowerCase().substring(1)).toString();
+            dealTextFirstList.stream().forEach(deal -> {
+                if (!values.contains(deal.getText().split("•")[1].trim()))
+                    values.add(deal.getText().split("•")[1].trim());
+            });
 
-            for (WebElement dealTextFirst : dealTextFirstList) {
-                dealFound = dealTextFirst.getText().split("•")[1].trim().toLowerCase().contains(dealText.trim().toLowerCase());
-                if (dealFound) {
-                    util.clickOnElement(dealTextFirst);
-                    util.waitForLoad(driver);
-                    dealFound = true;
-                    return new DealDetailsPage(driver);
-                }
+            dealItemCountBeforeScroll = driver.findElements(By.cssSelector("deal-item")).size();
+
+            System.out.println("values" + values);
+            boolean expectedDealExistsOnPage = values.contains(dealText.toUpperCase());
+            System.out.println("expectedDealExistsOnPage" + expectedDealExistsOnPage);
+            if (expectedDealExistsOnPage) {
+                dealFound = true;
+                util.moveToElementByText(dealText);
+                util.clickOnElementByText(dealText);
+                util.waitForLoad(driver);
+                return new DealDetailsPage(driver);
             }
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("window.scrollBy(0,screen.availHeight); ");
+            Thread.sleep(5000);
+            dealItemCountAfterScroll = driver.findElements((By.cssSelector("deal-item"))).size();
+            System.out.println("dealItemCountAfterScroll > dealItemCountBeforeScroll = " + dealItemCountAfterScroll + dealItemCountBeforeScroll);
 
-            // scroll by one page
-
-//JavascriptExecutor js = (JavascriptExecutor) driver;
-//js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
-//
-//            ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", driver.findElement(By.xpath("Value')]")));
-//
-//            JavascriptExecutor jse = (JavascriptExecutor) driver;
-//            jse.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-
-            act.sendKeys(Keys.PAGE_DOWN).build().perform();
-
-            // get the deals from the page
-            dealTextFirstList = driver.findElements(By.cssSelector("div.card-body p.card-text.deal-text-first"));
-//        } while (!dealFound && !endOfPageReached);
-        } while (!dealFound);
+        } while (!dealFound && (dealItemCountAfterScroll > dealItemCountBeforeScroll));
 
         return new DealDetailsPage(driver);
     }
 
-    public void waitUntilSpinnerDisappar(){
-        util.waitUntilElementDisappeared(driver, this.spinner);
+
+    public String getDetailTextSecondForDeal(String dealTextFirst) {
+
+
+            return findTheDealByDealTextFirst(dealTextFirst).getText();
+
     }
 
+    private WebElement findTheDealByDealTextFirst(String dealTextFirst) {
 
+        boolean dealFound = false;
+        List<String> values = new ArrayList<>();
+        By footerBy = By.cssSelector("footer");
+        int dealItemCountBeforeScroll = 0;
+        int dealItemCountAfterScroll = 0;
+        String text = "";
+        dealTextFirst = new StringBuilder().append(Character.toUpperCase(dealTextFirst.charAt(0))).append(dealTextFirst.toLowerCase().substring(1)).toString();
+
+        // find deal until found it or reached footer
+        do {
+            List<WebElement> dealTextFirstList = driver.findElements(By.cssSelector("deal-item p[class='card-text deal-text-first']"));
+
+            dealTextFirstList.stream().forEach(deal -> {
+                if (!values.contains(deal.getText().split("•")[1].trim()))
+                    values.add(deal.getText().split("•")[1].trim());
+            });
+
+            dealItemCountBeforeScroll = driver.findElements(By.cssSelector("deal-item")).size();
+
+            System.out.println("values" + values);
+            boolean expectedDealExistsOnPage = values.contains(dealTextFirst.toUpperCase());
+            System.out.println("expectedDealExistsOnPage" + expectedDealExistsOnPage);
+            if (expectedDealExistsOnPage) {
+                dealFound = true;
+                util.moveToElementByText(dealTextFirst);
+                return util.getElementByText(dealTextFirst);
+            }
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("window.scrollBy(0,screen.availHeight); ");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            dealItemCountAfterScroll = driver.findElements((By.cssSelector("deal-item"))).size();
+            System.out.println("dealItemCountAfterScroll > dealItemCountBeforeScroll = " + dealItemCountAfterScroll + dealItemCountBeforeScroll);
+
+        } while (!dealFound && (dealItemCountAfterScroll > dealItemCountBeforeScroll));
+
+        return null;
+    }
 }

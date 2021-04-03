@@ -19,7 +19,7 @@ public class CIMB_MY_DealsPage_Steps {
     private CIMB_MY_HomePage cimbMalaysiaHomePage;
     private DealsPage dealsPage;
     private DealDetailsPage dealDetailsPage;
-
+    private String deatailTextSecodForTheDeal;
 
 
     @Given("^I’m on CIMB \"([^\"]*)\" page$")
@@ -42,17 +42,18 @@ public class CIMB_MY_DealsPage_Steps {
 
         // select the section
         dealsPage.clickOnSection(sectionName);
-
-        // wait for the spinner to close
-        dealsPage.waitUntilSpinnerDisappar();
+//        deatailTextSecodForTheDeal = dealsPage.getDetailTextSecondForDeal(dealTextFirst);
 
         // select the deal to explore
         dealDetailsPage = dealsPage.clickOnDeal(dealTextFirst);
+
     }
 
     @Then("I will be able to see its details and other similar deals")
     public void iWillBeAbleToSeeItsDetailsAndOtherSimilarDeals() throws Throwable {
-        Assert.assertEquals(dealDetailsPage.getDetailTextSecond().getText(), "March Regional 50% Bonus BIG Points Campaign");
+        Assert.assertEquals(dealDetailsPage.getDetailTextSecond().getText(), "9% OFF hotel bookings");
+        Assert.assertTrue(dealDetailsPage.isSimilarSectionTitleDisplayed(), "Similar Deal Section title is not displayed");
+        Assert.assertTrue(dealDetailsPage.noOfSimilarDealsDisplayed() > 0, "No similar deals displayed");
 
     }
 }

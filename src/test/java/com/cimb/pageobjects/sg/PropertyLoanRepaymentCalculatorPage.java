@@ -9,6 +9,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author biswanath.padhi
  */
@@ -18,6 +21,33 @@ public class PropertyLoanRepaymentCalculatorPage {
     private final TestUtil util;
     private Logger logger;
     private WebDriver driver;
+    //Page Objects
+    @FindBy(xpath = "//span[text()='Property Loan Amount']//..//input")
+    private WebElement propertyLoanAmount;
+    @FindBy(xpath = "//span[text()='Property Loan Tenure']//..//input[@type='tel']")
+    private WebElement propertyLoanTenure;
+    @FindBy(xpath = "//table//th[text()='Interest Rates (p.a.)']")
+    private WebElement interestRatesTableColumnHeader;
+    @FindBy(xpath = "//table//th[text()='Monthly Repayment']")
+    private WebElement monthlyRepaymentTableColumnHeader;
+    @FindBy(xpath = "//table//th[text()='Monthly Repayment']")
+    private WebElement interestPayableTableColumnHeader;
+    @FindBy(xpath = "//table//th[text()='Principal Payable (p.a.)']")
+    private WebElement principalPayableTableColumnHeader;
+    @FindBy(xpath = "//table//th[text()='Outstanding Principal at Year End (p.a.)']")
+    private WebElement outstandingPrincipalTableColumnHeader;
+    @FindBy(xpath = "//span[text()='Effective Interest Rate']")
+    private WebElement effectiveInterestRate;
+    @FindBy(xpath = "//span[text()='Total Interest Payable']")
+    private WebElement totalInterestPayable;
+    @FindBy(xpath = "//span[text()='Total Amount Payable']")
+    private WebElement totalAmountPayable;
+    @FindBy(css = "div[data-component='table']")
+    private WebElement loanRepaymentTable;
+    @FindBy(xpath = "//div[@data-component='table']//../h2")
+    private WebElement loanRepaymentTableName;
+    @FindBy(xpath = "//a[contains(text(),'Show All')]")
+    private WebElement showAllLoanRepaymentTableRecords;
 
     //Constructors
     public PropertyLoanRepaymentCalculatorPage(WebDriver driver) {
@@ -26,44 +56,6 @@ public class PropertyLoanRepaymentCalculatorPage {
         this.util = new TestUtil(driver);
         PageFactory.initElements(driver, this);
     }
-
-    //Page Objects
-    @FindBy(xpath = "//span[text()='Property Loan Amount']//..//input")
-    private WebElement propertyLoanAmount;
-
-    @FindBy(xpath = "//span[text()='Property Loan Tenure']//..//input[@type='tel']")
-    private WebElement propertyLoanTenure;
-
-    @FindBy(xpath = "//table//th[text()='Interest Rates (p.a.)']")
-    private WebElement interestRatesTableColumnHeader;
-
-    @FindBy(xpath = "//table//th[text()='Monthly Repayment']")
-    private WebElement monthlyRepaymentTableColumnHeader;
-
-    @FindBy(xpath = "//table//th[text()='Monthly Repayment']")
-    private WebElement interestPayableTableColumnHeader;
-
-    @FindBy(xpath = "//table//th[text()='Principal Payable (p.a.)']")
-    private WebElement principalPayableTableColumnHeader;
-
-    @FindBy(xpath = "//table//th[text()='Outstanding Principal at Year End (p.a.)']")
-    private WebElement outstandingPrincipalTableColumnHeader;
-
-    @FindBy(xpath = "//span[text()='Effective Interest Rate']")
-    private WebElement effectiveInterestRate;
-
-    @FindBy(xpath = "//span[text()='Total Interest Payable']")
-    private WebElement totalInterestPayable;
-
-    @FindBy(xpath = "//span[text()='Total Amount Payable']")
-    private WebElement totalAmountPayable;
-
-    @FindBy(css = "div[data-component='table']")
-    private WebElement loanRepaymentTable;
-
-    @FindBy(xpath = "//div[@data-component='table']//../h2")
-    private WebElement loanRepaymentTableName;
-
 
 
     //Getters
@@ -80,8 +72,14 @@ public class PropertyLoanRepaymentCalculatorPage {
         return util.waitForElementToBeVisible(driver, this.loanRepaymentTable);
     }
 
-
-
+    public List<String> getInterestRateColumnValuesFromLoanRepaymentTable(){
+        List<WebElement> interestRateValueList = getLoanRepaymentTable().findElements(By.xpath("//tr//td[2]"));
+        List<String> interestRateColumnExtractedValues = new ArrayList<>();
+        for(WebElement interestRateValue : interestRateValueList){
+            interestRateColumnExtractedValues.add(interestRateValue.getText().trim());
+        }
+        return interestRateColumnExtractedValues;
+    }
     //Page Actions
     public void enterPropertyLoanAmount(long loanAmount) {
         util.enterTextinElement(getPropertyLoanAmount(), String.valueOf(loanAmount));
@@ -112,43 +110,43 @@ public class PropertyLoanRepaymentCalculatorPage {
         util.enterTextinElement(getPropertyLoanTenure(), String.valueOf(tenure));
     }
 
-    public boolean isPropertyLoanAmountVisible(){
+    public boolean isPropertyLoanAmountVisible() {
         return this.propertyLoanAmount.isDisplayed();
     }
 
-    public boolean isPropertyLoanTenureVisible(){
+    public boolean isPropertyLoanTenureVisible() {
         return this.propertyLoanTenure.isDisplayed();
     }
 
-    public boolean isInterestRatesTableColumnHeaderVisible(){
+    public boolean isInterestRatesTableColumnHeaderVisible() {
         return this.interestRatesTableColumnHeader.isDisplayed();
     }
 
-    public boolean isMonthlyRepaymentTableColumnHeaderVisible(){
+    public boolean isMonthlyRepaymentTableColumnHeaderVisible() {
         return this.monthlyRepaymentTableColumnHeader.isDisplayed();
     }
 
-    public boolean isInterestPayableTableColumnHeaderVisible(){
+    public boolean isInterestPayableTableColumnHeaderVisible() {
         return this.interestPayableTableColumnHeader.isDisplayed();
     }
 
-    public boolean isPrincipalPayableTableColumnHeaderVisible(){
+    public boolean isPrincipalPayableTableColumnHeaderVisible() {
         return this.principalPayableTableColumnHeader.isDisplayed();
     }
 
-    public boolean isOutstandingPrincipalTableColumnHeaderVisible(){
+    public boolean isOutstandingPrincipalTableColumnHeaderVisible() {
         return this.outstandingPrincipalTableColumnHeader.isDisplayed();
     }
 
-    public boolean isEffectiveInterestRateVisible(){
+    public boolean isEffectiveInterestRateVisible() {
         return this.effectiveInterestRate.isDisplayed();
     }
 
-    public boolean isTotalInterestPayable(){
+    public boolean isTotalInterestPayable() {
         return this.totalInterestPayable.isDisplayed();
     }
 
-    public boolean isTotalAmountPayable(){
+    public boolean isTotalAmountPayable() {
         return this.totalAmountPayable.isDisplayed();
     }
 
@@ -162,9 +160,13 @@ public class PropertyLoanRepaymentCalculatorPage {
 
     public int getNumberOfRowsInLoanRepaymentTable() {
 
+        // click showAll button if displayed
+        if (showAllLoanRepaymentTableRecords.isDisplayed()) {
+            util.clickOnElement(showAllLoanRepaymentTableRecords);
+        }
+
         // doing -1 to exclude table header row
         int noOfRows = getLoanRepaymentTable().findElements(By.cssSelector("tr")).size() - 1;
-
         return noOfRows;
     }
 }

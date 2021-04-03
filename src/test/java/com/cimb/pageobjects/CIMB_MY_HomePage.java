@@ -60,7 +60,7 @@ public class CIMB_MY_HomePage {
 
     // Page Actions
     public void closeDefaultLandingDialog() {
-        util.clickOnElement(getOverlayClose());
+        util.waitAndDismissAppearedAlertsModals(getOverlayClose());
     }
 
     public void clickBurgerMenu() {
@@ -68,6 +68,7 @@ public class CIMB_MY_HomePage {
     }
 
     public void clickOnQuickLinksByQuickLinkText(String quickLinkText) {
+
         WebElement quickLink = driver.findElement(By.xpath("//nav[@class='nav-pillar']/a[text()='" + quickLinkText + "']"));
         quickLink = util.waitForElementToBeClickable(driver, quickLink);
         util.clickOnElement(quickLink);

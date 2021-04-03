@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -22,10 +23,10 @@ import java.util.Properties;
 
 public class TestUtil {
 
-//    public static final String TESTDATA_SHEET_PATH = testDataDir + "TestData.xlsx";
+    public JavascriptExecutor js;
+    //    public static final String TESTDATA_SHEET_PATH = testDataDir + "TestData.xlsx";
     private long IMPLICIT_WAIT;
     private long PAGELOAD_TIMEOUT;
-    public JavascriptExecutor js;
     private Logger logger;
     private FluentWait<WebDriver> wait;
     private WebDriver driver;
@@ -115,6 +116,10 @@ public class TestUtil {
 //                    shouldBreak = true;
 //                    break;
 //                }
+                element = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(10)).pollingEvery(Duration.ofSeconds(2))
+                        .ignoring(StaleElementReferenceException.class)
+                        .ignoring(NoSuchElementException.class)
+                        .until(ExpectedConditions.visibilityOf(element));
 
                 moveToElementAndClick(driver, element);
                 shouldBreak = true;
@@ -126,6 +131,35 @@ public class TestUtil {
             }
             attempts++;
         }
+    }
+
+    public void waitAndDismissAppearedAlertsModals(WebElement element) {
+
+        int attempts = 0;
+        boolean shouldBreak = false;
+        boolean elementDisplayed = false;
+        while (!shouldBreak && attempts < 2) {
+            try {
+                logger.info("Trying to see if element appeared " + element);
+                wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(10)).pollingEvery(Duration.ofSeconds(2))
+                        .ignoring(StaleElementReferenceException.class)
+                        .ignoring(NoSuchElementException.class);
+                if (element.isDisplayed()) {
+                    elementDisplayed = true;
+                    shouldBreak = true;
+                    break;
+                }
+            } catch (StaleElementReferenceException e) {
+                logger.error("**** Stale Element Exception ****" + " attempt = " + attempts + element + driver);
+            } catch (NoSuchElementException e) {
+                logger.error("**** Unable to click element ****" + element);
+            }
+            attempts++;
+
+            break;
+        }
+
+        if (elementDisplayed) element.click();
     }
 
     public void enterTextinElement(WebElement element, String textToEnter) {
@@ -221,6 +255,11 @@ public class TestUtil {
         return element;
     }
 
+    public List<WebElement> waitForElementsToBeVisible(WebDriver driver, List<WebElement> similarDeals) {
+        similarDeals.forEach(deal -> waitForElementToBeClickable(driver, deal));
+        return similarDeals;
+    }
+
     public void waitForLoad(WebDriver driver) {
         ExpectedCondition<Boolean> pageLoadCondition = new
                 ExpectedCondition<Boolean>() {
@@ -272,11 +311,12 @@ public class TestUtil {
         }
     }
 
-    public WebDriver switchToWindowById(int index){
+    public WebDriver switchToWindowById(int index) {
         ArrayList<String> tabList = new ArrayList<String>(driver.getWindowHandles());
         //switch to new tab
         return driver.switchTo().window(tabList.get((1)));
     }
+
     /***
      * Switch to a frame by providing either frame name or frame ID
      * @param frameNameOrId
@@ -334,12 +374,79 @@ public class TestUtil {
     }
 
 
-    public void visitMe(String url){
+    public void visitMe(String url) {
         this.driver.navigate().to(url);
         waitForLoad(this.driver);
     }
 
-    public void waitUntilElementDisappeared(WebDriver driver, WebElement element){
+    public void waitUntilElementDisappeared(WebDriver driver, WebElement element) {
         new WebDriverWait(driver, 20).until(ExpectedConditions.invisibilityOfAllElements(element));
+    }
+
+    public void clickOnElementByText(String text) {
+        By by = By.xpath("//*[contains(text(),'" + text + "')]");
+        clickOnElement(driver.findElement(by));
+    }
+
+    public void clickOnElementTypeByText(String elementType, String text) {
+        By by = By.xpath("//" + elementType + "[contains(text(),'" + text + "')]");
+        clickOnElement(driver.findElement(by));
+    }
+
+    public void moveToElementByText(String text) {
+        logger.info("start moveToElementByText()");
+        WebElement element = findElementByText(text);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView();", element);
+        logger.info("end moveToElementByText");
+    }
+
+    /**
+     * Finds an element by text of any type
+     * @param text
+     * @return
+     */
+    public WebElement findElementByText(String text){
+        By by = By.xpath("//*[contains(text(),'" + text + "')]");
+        WebElement element = driver.findElement(by);
+        return element;
+    }
+
+    /**
+     * Finds a list of elements using text provided
+     * @param text
+     * @return
+     */
+    public List<WebElement> findElementsByText(String text){
+        By by = By.xpath("//*[contains(text(),'" + text + "')]");
+        List<WebElement> elementList = driver.findElements(by);
+        return elementList;
+    }
+
+
+    /**
+     * Finds an element using element type and text provided
+     * @param text
+     * @return
+     */
+    public WebElement findElementByElementTypeUsingText(String elementType, String text){
+        By by = By.xpath("//"+elementType+"*[contains(text(),'" + text + "')]");
+        WebElement element = driver.findElement(by);
+        return element;
+    }
+
+    /**
+     * Finds a list of elements using element type and text provided
+     * @param text
+     * @return
+     */
+    public List<WebElement> findElementsByElementTypeUsingText(String elementType, String text){
+        By by = By.xpath("//"+elementType+"*[contains(text(),'" + text + "')]");
+        List<WebElement> elementList = driver.findElements(by);
+        return elementList;
+    }
+
+    public WebElement getElementByText(String dealTextFirst) {
+         return findElementByText(dealTextFirst);
     }
 }
