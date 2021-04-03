@@ -1,4 +1,4 @@
-Feature: verify CIMB Singapore Tools
+Feature: Verify CIMB Singapore Tools
 
   @tools @sg
   Scenario Outline: Verify Property Loan Repayment Calculator

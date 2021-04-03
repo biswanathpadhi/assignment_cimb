@@ -116,7 +116,7 @@ public class TestUtil {
 //                    shouldBreak = true;
 //                    break;
 //                }
-                element = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(10)).pollingEvery(Duration.ofSeconds(2))
+                element = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(IMPLICIT_WAIT)).pollingEvery(Duration.ofSeconds(IMPLICIT_WAIT/5))
                         .ignoring(StaleElementReferenceException.class)
                         .ignoring(NoSuchElementException.class)
                         .until(ExpectedConditions.visibilityOf(element));
@@ -162,7 +162,7 @@ public class TestUtil {
         if (elementDisplayed) element.click();
     }
 
-    public void enterTextinElement(WebElement element, String textToEnter) {
+    public void enterTextInElement(WebElement element, String textToEnter) {
         try {
             logger.info("Trying to enter text in element " + element);
 
@@ -193,7 +193,7 @@ public class TestUtil {
             actions.moveToElement(element).build().perform();
 
             JavascriptExecutor js = (JavascriptExecutor) driver;
-            js.executeScript("arguments[0].scrollIntoView();", element);
+            js.executeScript("arguments[0].scrollIntoViewIfNeeded();", element);
 
             element.click();
         } catch (Exception e) {
@@ -238,7 +238,7 @@ public class TestUtil {
 
         while (attempts < 4) {
             try {
-                wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)).pollingEvery(Duration.ofSeconds(5))
+                wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(IMPLICIT_WAIT)).pollingEvery(Duration.ofSeconds(5))
                         .ignoring(StaleElementReferenceException.class)
                         .ignoring(NoSuchElementException.class);
                 wait.until(ExpectedConditions.visibilityOf(element));
@@ -316,7 +316,7 @@ public class TestUtil {
     }
 
     public WebDriver switchToWindowById(int index) {
-        ArrayList<String> tabList = new ArrayList<String>(driver.getWindowHandles());
+        ArrayList<String> tabList = new ArrayList<>(driver.getWindowHandles());
         //switch to new tab
         return driver.switchTo().window(tabList.get((1)));
     }
@@ -401,7 +401,7 @@ public class TestUtil {
         logger.info("start moveToElementByText()");
         WebElement element = findElementByText(text);
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].scrollIntoView();", element);
+        js.executeScript("arguments[0].scrollIntoViewIfNeeded();", element);
         logger.info("end moveToElementByText");
     }
 

@@ -82,7 +82,7 @@ public class PropertyLoanRepaymentCalculatorPage {
     }
     //Page Actions
     public void enterPropertyLoanAmount(long loanAmount) {
-        util.enterTextinElement(getPropertyLoanAmount(), String.valueOf(loanAmount));
+        util.enterTextInElement(getPropertyLoanAmount(), String.valueOf(loanAmount));
     }
 
     public void enterYearNInterestRate(byte year, float interestRate) {
@@ -103,11 +103,11 @@ public class PropertyLoanRepaymentCalculatorPage {
 
         // Formatting the interest rate into 2 decimal places and making it as a string
         String value = String.format("%.2f", interestRate).replace(",", "");
-        util.enterTextinElement(interestRateField, value);
+        util.enterTextInElement(interestRateField, value);
     }
 
     public void enterPropertyLoanTenure(long tenure) {
-        util.enterTextinElement(getPropertyLoanTenure(), String.valueOf(tenure));
+        util.enterTextInElement(getPropertyLoanTenure(), String.valueOf(tenure));
     }
 
     public boolean isPropertyLoanAmountVisible() {
