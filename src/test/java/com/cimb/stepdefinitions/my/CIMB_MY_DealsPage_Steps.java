@@ -42,7 +42,7 @@ public class CIMB_MY_DealsPage_Steps {
 
         // select the section
         dealsPage.clickOnSection(sectionName);
-//        deatailTextSecodForTheDeal = dealsPage.getDetailTextSecondForDeal(dealTextFirst);
+        deatailTextSecodForTheDeal = dealsPage.getDetailTextSecondForDeal(dealTextFirst);
 
         // select the deal to explore
         dealDetailsPage = dealsPage.clickOnDeal(dealTextFirst);
@@ -51,7 +51,7 @@ public class CIMB_MY_DealsPage_Steps {
 
     @Then("I will be able to see its details and other similar deals")
     public void iWillBeAbleToSeeItsDetailsAndOtherSimilarDeals() throws Throwable {
-        Assert.assertEquals(dealDetailsPage.getDetailTextSecond().getText(), "9% OFF hotel bookings");
+        Assert.assertEquals(dealDetailsPage.getDetailTextSecond().getText(), deatailTextSecodForTheDeal);
         Assert.assertTrue(dealDetailsPage.isSimilarSectionTitleDisplayed(), "Similar Deal Section title is not displayed");
         Assert.assertTrue(dealDetailsPage.noOfSimilarDealsDisplayed() > 0, "No similar deals displayed");
 

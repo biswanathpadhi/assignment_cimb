@@ -26,6 +26,9 @@ public class DealsPage {
     @FindBy(css = ".modal-close-button")
     private WebElement overlayCountryClose;
 
+    By byDealItem =  By.cssSelector("deal-item");
+    By dealSecondText = By.cssSelector("p[class='card-text deal-text-second'");
+
     // Constructor to initialize page objects
     public DealsPage(WebDriver driver) {
         this.logger = LogManager.getLogger();
@@ -69,7 +72,7 @@ public class DealsPage {
                     values.add(deal.getText().split("•")[1].trim());
             });
 
-            dealItemCountBeforeScroll = driver.findElements(By.cssSelector("deal-item")).size();
+            dealItemCountBeforeScroll = driver.findElements(byDealItem).size();
 
             System.out.println("values" + values);
             boolean expectedDealExistsOnPage = values.contains(dealText.toUpperCase());
@@ -84,7 +87,7 @@ public class DealsPage {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("window.scrollBy(0,screen.availHeight); ");
             Thread.sleep(5000);
-            dealItemCountAfterScroll = driver.findElements((By.cssSelector("deal-item"))).size();
+            dealItemCountAfterScroll = driver.findElements(byDealItem).size();
             System.out.println("dealItemCountAfterScroll > dealItemCountBeforeScroll = " + dealItemCountAfterScroll + dealItemCountBeforeScroll);
 
         } while (!dealFound && (dealItemCountAfterScroll > dealItemCountBeforeScroll));
@@ -94,21 +97,17 @@ public class DealsPage {
 
 
     public String getDetailTextSecondForDeal(String dealTextFirst) {
-
-
-            return findTheDealByDealTextFirst(dealTextFirst).getText();
-
+        return findTheDealByDealTextFirst(dealTextFirst).getText();
     }
 
     private WebElement findTheDealByDealTextFirst(String dealTextFirst) {
 
         boolean dealFound = false;
         List<String> values = new ArrayList<>();
-        By footerBy = By.cssSelector("footer");
+        WebElement targetElement = null;
         int dealItemCountBeforeScroll = 0;
         int dealItemCountAfterScroll = 0;
-        String text = "";
-        dealTextFirst = new StringBuilder().append(Character.toUpperCase(dealTextFirst.charAt(0))).append(dealTextFirst.toLowerCase().substring(1)).toString();
+
 
         // find deal until found it or reached footer
         do {
@@ -121,14 +120,18 @@ public class DealsPage {
 
             dealItemCountBeforeScroll = driver.findElements(By.cssSelector("deal-item")).size();
 
-            System.out.println("values" + values);
             boolean expectedDealExistsOnPage = values.contains(dealTextFirst.toUpperCase());
-            System.out.println("expectedDealExistsOnPage" + expectedDealExistsOnPage);
+
             if (expectedDealExistsOnPage) {
                 dealFound = true;
+                dealTextFirst = new StringBuilder().append(Character.toUpperCase(dealTextFirst.charAt(0))).append(dealTextFirst.toLowerCase().substring(1)).toString();
                 util.moveToElementByText(dealTextFirst);
-                return util.getElementByText(dealTextFirst);
+                targetElement = util.getElementByText(dealTextFirst);
+                targetElement = targetElement.findElement(By.xpath("../p[@class='card-text deal-text-second']"));
+
             }
+
+            //scroll
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("window.scrollBy(0,screen.availHeight); ");
             try {
@@ -136,11 +139,10 @@ public class DealsPage {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            dealItemCountAfterScroll = driver.findElements((By.cssSelector("deal-item"))).size();
-            System.out.println("dealItemCountAfterScroll > dealItemCountBeforeScroll = " + dealItemCountAfterScroll + dealItemCountBeforeScroll);
+            dealItemCountAfterScroll = driver.findElements((byDealItem)).size();
 
         } while (!dealFound && (dealItemCountAfterScroll > dealItemCountBeforeScroll));
 
-        return null;
+        return targetElement;
     }
 }

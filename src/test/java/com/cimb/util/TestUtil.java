@@ -44,11 +44,11 @@ public class TestUtil {
      * Check if the JQuery is the page is completely loaded
      *
      */
-    public static void isjQueryLoaded(WebDriver driver) {
+    public void isjQueryLoaded(WebDriver driver) {
 
         System.out.println("Waiting for ready state complete");
 
-        (new WebDriverWait(driver, 30)).until(new ExpectedCondition<Boolean>() {
+        (new WebDriverWait(driver,PAGELOAD_TIMEOUT )).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 JavascriptExecutor js = (JavascriptExecutor) d;
                 String readyState = js.executeScript("return document.readyState").toString();
@@ -106,9 +106,9 @@ public class TestUtil {
 
     public void clickOnElement(WebElement element) {
 
-        int attempts = 0;
+        int attempts = 1;
         boolean shouldBreak = false;
-        while (!shouldBreak && attempts < 2) {
+        while (!shouldBreak && attempts < 4) {
             try {
                 logger.info("Trying to click on element " + element);
 //                if (element.isEnabled() && element.isDisplayed()) {
@@ -135,10 +135,10 @@ public class TestUtil {
 
     public void waitAndDismissAppearedAlertsModals(WebElement element) {
 
-        int attempts = 0;
+        int attempts = 1;
         boolean shouldBreak = false;
         boolean elementDisplayed = false;
-        while (!shouldBreak && attempts < 2) {
+        while (!shouldBreak && attempts < 4) {
             try {
                 logger.info("Trying to see if element appeared " + element);
                 wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(10)).pollingEvery(Duration.ofSeconds(2))
@@ -192,6 +192,9 @@ public class TestUtil {
 
             actions.moveToElement(element).build().perform();
 
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].scrollIntoView();", element);
+
             element.click();
         } catch (Exception e) {
             logger.error("******* Error Message: " + e.getMessage());
@@ -205,7 +208,7 @@ public class TestUtil {
         int tries = 0;
         boolean found = false;
 
-        wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)).pollingEvery(Duration.ofSeconds(5))
+        wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(IMPLICIT_WAIT)).pollingEvery(Duration.ofSeconds(5))
                 .ignoring(StaleElementReferenceException.class);
 
         while ((System.currentTimeMillis() - startTime) < 91000) {
@@ -231,14 +234,15 @@ public class TestUtil {
     }
 
     public WebElement waitForElementToBeVisible(WebDriver driver, WebElement element) {
-        int attempts = 0;
+        int attempts = 1;
 
-        while (attempts < 3) {
+        while (attempts < 4) {
             try {
                 wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(30)).pollingEvery(Duration.ofSeconds(5))
                         .ignoring(StaleElementReferenceException.class)
                         .ignoring(NoSuchElementException.class);
                 wait.until(ExpectedConditions.visibilityOf(element));
+                new Actions(driver).moveToElement(element);
 //                waitForLoad(driver);
 //                new WebDriverWait(driver, 20).until(
 //                        webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
@@ -267,7 +271,7 @@ public class TestUtil {
                         return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
                     }
                 };
-        WebDriverWait wait = new WebDriverWait(driver, 60);
+        WebDriverWait wait = new WebDriverWait(driver, PAGELOAD_TIMEOUT);
         wait.until(pageLoadCondition);
     }
 

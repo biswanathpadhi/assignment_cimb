@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
         }, // the path of the feature files
 
         glue = {"com/cimb/stepdefinitions", "com/cimb/util"}, // the path of the step definition files from test java folder
-
+//        tags = {"@my", "@sg", "@deals", "tools"},
         // plugin to generate report in different formats
         plugin = {"pretty",
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
