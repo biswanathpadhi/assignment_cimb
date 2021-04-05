@@ -27,8 +27,8 @@ public class DriverFactory {
      * This method is used to initialize the thradlocal driver on the basis of given
      * browser
      *
-     * @param browser
-     * @return this will return tldriver.
+     * @param browser provide the browser type to run the test
+     * @return this will return thread local driver.
      */
     public WebDriver init_driver(String browser) {
 
@@ -39,24 +39,12 @@ public class DriverFactory {
         if (browser.equals("chrome")) {
 
             /**
-             * Create webdriver using webdrivermanager ----- CURRENTLY HAVING ISSUE with as reported in GITHUBISSUE 442
+             * Create web driver using webdrivermanager
              */
             System.setProperty("webdriver.chrome.silentOutput", "true");
             WebDriverManager.chromedriver().setup();
             threadLocal.set(new ChromeDriver());
 
-            /**
-             * Create webdriver using local driver file
-             */
-
-            /*
-            String userDir = System.getProperty("user.dir");
-             Load using chromeDriver
-            System.setProperty("webdriver.chrome.driver", "//src//test//resources//drivers/chromedriver.exe");
-            System.setProperty("webdriver.chrome.driver", "src//test//resources//drivers//chromedriver.exe");
-            threadLocal.set(new ChromeDriver());
-
-             */
         } else if (browser.equals("firefox")) {
 
             WebDriverManager.firefoxdriver().setup();
@@ -91,11 +79,6 @@ public class DriverFactory {
 
     }
 
-    /**
-     * this is used to get the driver with ThreadLocal
-     *
-     * @return
-     */
     public static synchronized WebDriver getDriver() {
         return threadLocal.get();
     }

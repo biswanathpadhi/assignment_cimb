@@ -1,4 +1,4 @@
-package com.cimb.pageobjects;
+package com.cimb.pageobjects.my;
 
 import com.cimb.util.ConfigReader;
 import com.cimb.util.TestUtil;

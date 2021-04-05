@@ -1,4 +1,4 @@
-package com.cimb.pageobjects;
+package com.cimb.pageobjects.my;
 
 import com.cimb.util.TestUtil;
 import org.apache.logging.log4j.LogManager;

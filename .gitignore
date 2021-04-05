@@ -18,14 +18,16 @@
 *.zip
 *.tar.gz
 *.rar
+*.logs
+*.iml
+.idea/
+.eclipse
+
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /reports_*/
-/target/
-/test-output-thread/
-/.idea/.gitignore
-/.idea/assignment_cimb.iml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/vcs.xml
+target/
+/test*/
+/.idea/
+

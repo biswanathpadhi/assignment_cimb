@@ -1,9 +1,9 @@
 package com.cimb.stepdefinitions.my;
 
 import com.cimb.factory.DriverFactory;
-import com.cimb.pageobjects.CIMB_MY_HomePage;
-import com.cimb.pageobjects.DealDetailsPage;
-import com.cimb.pageobjects.DealsPage;
+import com.cimb.pageobjects.my.CIMB_MY_HomePage;
+import com.cimb.pageobjects.my.DealDetailsPage;
+import com.cimb.pageobjects.my.DealsPage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;

@@ -1,4 +1,4 @@
-package com.cimb.pageobjects;
+package com.cimb.pageobjects.my;
 
 import com.cimb.util.TestUtil;
 import org.apache.logging.log4j.LogManager;
@@ -44,9 +44,6 @@ public class DealsPage {
 
     // Page Actions
     public void closeDefaultLandingDialog() {
-//        if (getOverlayCountryClose().isDisplayed()) {
-//            util.waitAndDismissAppearedAlertsModals(getOverlayCountryClose());
-//        }
         util.waitAndDismissAppearedAlertsModals(getOverlayCountryClose());
     }
 
@@ -58,15 +55,14 @@ public class DealsPage {
     public DealDetailsPage clickOnDeal(String dealText) throws InterruptedException {
         boolean dealFound = false;
         List<String> values = new ArrayList<>();
-        By footerBy = By.cssSelector("footer");
         int dealItemCountBeforeScroll = 0;
         int dealItemCountAfterScroll = 0;
-        String text = "";
+        dealText = new StringBuilder().append(Character.toUpperCase(dealText.charAt(0))).append(dealText.toLowerCase().substring(1)).toString();
 
         // find deal until found it or reached footer
         do {
             List<WebElement> dealTextFirstList = driver.findElements(By.cssSelector("deal-item p[class='card-text deal-text-first']"));
-            dealText = new StringBuilder().append(Character.toUpperCase(dealText.charAt(0))).append(dealText.toLowerCase().substring(1)).toString();
+
             dealTextFirstList.stream().forEach(deal -> {
                 if (!values.contains(deal.getText().split("•")[1].trim()))
                     values.add(deal.getText().split("•")[1].trim());
@@ -74,9 +70,8 @@ public class DealsPage {
 
             dealItemCountBeforeScroll = driver.findElements(byDealItem).size();
 
-            System.out.println("values" + values);
             boolean expectedDealExistsOnPage = values.contains(dealText.toUpperCase());
-            System.out.println("expectedDealExistsOnPage" + expectedDealExistsOnPage);
+
             if (expectedDealExistsOnPage) {
                 dealFound = true;
                 util.moveToElementByText(dealText);
@@ -88,7 +83,6 @@ public class DealsPage {
             js.executeScript("window.scrollBy(0,screen.availHeight); ");
             Thread.sleep(5000);
             dealItemCountAfterScroll = driver.findElements(byDealItem).size();
-            System.out.println("dealItemCountAfterScroll > dealItemCountBeforeScroll = " + dealItemCountAfterScroll + dealItemCountBeforeScroll);
 
         } while (!dealFound && (dealItemCountAfterScroll > dealItemCountBeforeScroll));
 
@@ -134,6 +128,7 @@ public class DealsPage {
             //scroll
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("window.scrollBy(0,screen.availHeight); ");
+
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {

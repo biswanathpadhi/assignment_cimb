@@ -46,13 +46,13 @@ public class TestUtil {
      */
     public void isjQueryLoaded(WebDriver driver) {
 
-        System.out.println("Waiting for ready state complete");
+        logger.info("Waiting for ready state complete");
 
         (new WebDriverWait(driver,PAGELOAD_TIMEOUT )).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
                 JavascriptExecutor js = (JavascriptExecutor) d;
                 String readyState = js.executeScript("return document.readyState").toString();
-                System.out.println("Ready State: " + readyState);
+                logger.info("Ready State: " + readyState);
                 return (Boolean) js.executeScript("return !!window.jQuery && window.jQuery.active == 0");
             }
         });
@@ -111,11 +111,6 @@ public class TestUtil {
         while (!shouldBreak && attempts < 4) {
             try {
                 logger.info("Trying to click on element " + element);
-//                if (element.isEnabled() && element.isDisplayed()) {
-//                    moveToElementAndClick(driver, element);
-//                    shouldBreak = true;
-//                    break;
-//                }
                 element = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(IMPLICIT_WAIT)).pollingEvery(Duration.ofSeconds(IMPLICIT_WAIT/5))
                         .ignoring(StaleElementReferenceException.class)
                         .ignoring(NoSuchElementException.class)
@@ -155,7 +150,6 @@ public class TestUtil {
                 logger.error("**** Unable to click element ****" + element);
             }
             attempts++;
-
             break;
         }
 
@@ -243,11 +237,6 @@ public class TestUtil {
                         .ignoring(NoSuchElementException.class);
                 wait.until(ExpectedConditions.visibilityOf(element));
                 new Actions(driver).moveToElement(element);
-//                waitForLoad(driver);
-//                new WebDriverWait(driver, 20).until(
-//                        webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
-
-
             } catch (StaleElementReferenceException e) {
                 logger.error("**** Stale Element Exception ****" + " attempt = " + attempts + element + driver);
             } catch (NoSuchElementException e) {
@@ -431,7 +420,7 @@ public class TestUtil {
     /**
      * Finds an element using element type and text provided
      * @param text
-     * @return
+     * @return returns the web element
      */
     public WebElement findElementByElementTypeUsingText(String elementType, String text){
         By by = By.xpath("//"+elementType+"*[contains(text(),'" + text + "')]");
@@ -442,12 +431,11 @@ public class TestUtil {
     /**
      * Finds a list of elements using element type and text provided
      * @param text
-     * @return
+     * @return  web element containint text
      */
     public List<WebElement> findElementsByElementTypeUsingText(String elementType, String text){
         By by = By.xpath("//"+elementType+"*[contains(text(),'" + text + "')]");
-        List<WebElement> elementList = driver.findElements(by);
-        return elementList;
+        return driver.findElements(by);
     }
 
     public WebElement getElementByText(String dealTextFirst) {
